@@ -1,5 +1,6 @@
 package com.cucumber.stepdefs;
 
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -15,27 +16,33 @@ import static org.junit.Assert.assertEquals;
 public class StoreImplementations {
     private Response storeResponse;
     private Response deleteOrder;
-    @Given("the user add new purchasing with post-petition")
-    public void postAddPurchase() {
-        File file = new File("src/test/java/resources/data/bodyRequestStore.json");
-        storeResponse = given().contentType(ContentType.JSON).body(file).post("https://petstore.swagger.io/v2/store/order");
+
+    @Before
+    public void setUp() {
+        String baseUri = "https://petstore.swagger.io/v2";
     }
 
-    @Then("returns {int} ok add purchasing")
-    public void returnsOkAddPurchasing(int arg0) {
+    @Given("the user add new purchasing with post-petition")
+    public void postAddPurchase(String baseUri) {
+        File file = new File("src/test/java/resources/data/bodyRequestStore.json");
+        storeResponse = given().contentType(ContentType.JSON).body(file).post(baseUri + "/store/order");
+    }
+
+    @Then("returns 200 ok add purchasing")
+    public void returnsOkAddPurchasing() {
         storeResponse.statusCode();
         assertEquals(200, storeResponse.getStatusCode());
         storeResponse.then().body("status", equalTo("placed"));
     }
 
     @When("the user remove purchasing with post-petition")
-    public void theUserRemovePurchasingWithPostPetition() {
+    public void theUserRemovePurchasingWithPostPetition(String baseUri) {
         String orderId = "1999";
-        deleteOrder = given().log().all().delete("https://petstore.swagger.io/v2/store/order/" + orderId);
+        deleteOrder = given().log().all().delete(baseUri + "/store/order/" + orderId);
     }
 
-    @Then("returns {int} ok remove purchasing")
-    public void returnsOkRemovePurchasing(int arg0) {
+    @Then("returns 200 ok remove purchasing")
+    public void returnsOkRemovePurchasing() {
         storeResponse.statusCode();
         assertEquals(200, storeResponse.getStatusCode());
     }

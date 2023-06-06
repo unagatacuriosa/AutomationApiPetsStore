@@ -17,43 +17,48 @@ public class UserImplementations {
     private Response userResponse;
     private Response deleteUser;
     private String username = "gabiqa";
-    @Given("the user create a new user")
-    public void postAddPet() {
-        File file = new File("src/test/java/resources/data/bodyRequestUser.json");
-        userResponse = given().contentType(ContentType.JSON).body(file).post("https://petstore.swagger.io/v2/user");
+
+    public void setUp() {
+        String baseUri = "https://petstore.swagger.io/v2";
     }
 
-    @Then("returns {int} ok and create user")
-    public void returnsOkAndCreateUser(int arg0) {
+    @Given("the user create a new user")
+    public void postAddPet(String baseUri) {
+        File file = new File("src/test/java/resources/data/bodyRequestUser.json");
+        userResponse = given().contentType(ContentType.JSON).body(file).post(baseUri + "/user");
+    }
+
+    @Then("returns 200 ok and create user")
+    public void returnsOkAndCreateUser() {
         userResponse.statusCode();
         assertEquals(200, userResponse.getStatusCode());
     }
 
     @When("the user update username")
-    public void theUserUpdateUsername() {
+    public void theUserUpdateUsername(String baseUri) {
         File file = new File("src/test/java/resources/data/putBodyRequestUsers.json");
-        userResponse = given().contentType(ContentType.JSON).body(file).put("https://petstore.swagger.io/v2/user/" + username);
+        userResponse = given().contentType(ContentType.JSON).body(file).put(baseUri + "/user/" + username);
     }
 
-    @Then("returns {int} and validate the username")
-    public void returnsAndValidateTheUsername(int arg0) {
+    @Then("returns 200 and validate the username")
+    public void returnsAndValidateTheUsername() {
         userResponse.statusCode();
         assertEquals(200, userResponse.getStatusCode());
     }
 
     @And("the user remove user")
-    public void theUserRemoveUser() {
-        deleteUser = given().log().all().delete("https://petstore.swagger.io/v2/user/" + username);
+    public void theUserRemoveUser(String baseUri) {
+        deleteUser = given().log().all().delete(baseUri + "/user/" + username);
     }
 
     @Given("the create an array with a list of user")
-    public void theCreateAnArrayWithAListOfUser() {
+    public void theCreateAnArrayWithAListOfUser(String baseUri) {
         File file = new File("src/test/java/resources/data/bodyRequestUserArray.json");
-        userResponse = given().contentType(ContentType.JSON).body(file).post("https://petstore.swagger.io/v2/user/createWithArray");
+        userResponse = given().contentType(ContentType.JSON).body(file).post(baseUri + "/user/createWithArray");
     }
 
-    @Then("returns {int} remove user")
-    public void returnsRemoveUser(int arg0) {
+    @Then("returns 200 remove user")
+    public void returnsRemoveUser() {
         userResponse.statusCode();
         assertEquals(200, userResponse.getStatusCode());
     }

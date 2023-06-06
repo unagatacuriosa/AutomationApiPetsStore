@@ -16,22 +16,26 @@ public class PetsImplementations {
     private Response petResponse;
     private Response deletePet;
 
-    @Given("the user add a new pet with post petition")
-    public void postAddPet() {
-        File file = new File("src/test/java/resources/data/bodyRequestPets.json");
-        petResponse = given().contentType(ContentType.JSON).body(file).post("https://petstore.swagger.io/v2/pet");
+    public void setUp() {
+        String baseUri = "https://petstore.swagger.io/v2";
     }
 
-    @And("returns {int}")
-    public void validatePetition(int arg0) {
+    @Given("the user add a new pet with post petition")
+    public void postAddPet(String baseUri) {
+        File file = new File("src/test/java/resources/data/bodyRequestPets.json");
+        petResponse = given().contentType(ContentType.JSON).body(file).post(baseUri + "/pet");
+    }
+
+    @And("returns 200")
+    public void validatePetition() {
         petResponse.statusCode();
         assertEquals(200, petResponse.getStatusCode());
     }
 
     @Given("the user update a name of pet with put petition")
-    public void theUserUpdateANameOfPetWithPutPetition() {
+    public void theUserUpdateANameOfPetWithPutPetition(String baseUri) {
         File file = new File("src/test/java/resources/data/putBodyRequestPets.json");
-        petResponse = given().contentType(ContentType.JSON).body(file).put("https://petstore.swagger.io/v2/pet");
+        petResponse = given().contentType(ContentType.JSON).body(file).put(baseUri + "/pet");
     }
 
     @Then("validate the update name of the pet")
@@ -40,8 +44,8 @@ public class PetsImplementations {
     }
 
     @Given("the user remove a pet with delete petition")
-    public void theUserRemoveAPetWithDeletePetition() {
+    public void theUserRemoveAPetWithDeletePetition(String baseUri) {
         String petId = "1999";
-        deletePet = given().log().all().delete("https://petstore.swagger.io/v2/pet/" + petId);
+        deletePet = given().log().all().delete(baseUri + "/pet/" + petId);
     }
 }
