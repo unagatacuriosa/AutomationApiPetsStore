@@ -4,7 +4,7 @@ Feature: (e2e) Validate store
     Given the user add new purchasing with post-petition
     Then returns 200 ok add purchasing
 
-  @putRemovePurchase
+  @removePurchase
   Scenario: (e2e) Remove a exists
     Given the user add new purchasing with post-petition
     When the user remove purchasing with post-petition

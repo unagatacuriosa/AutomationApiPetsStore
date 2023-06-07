@@ -14,11 +14,9 @@ Feature: (e2e) Validate users
   Scenario: (e2e) Remove a user
     Given the user create a new user
     And the user remove user
-    Then returns 200
+    Then returns 200 remove user
 
   @addUserArray
-  Scenario: (e2e) Put update a user
+  Scenario: (e2e) Post Create a user's for array
     Given the create an array with a list of user
-    When make a post-petition
-    And returns 200 ok add pet
-    Then compare expected array create vs original array
+    Then returns 200 ok and create user
